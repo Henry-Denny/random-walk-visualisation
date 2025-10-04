@@ -1,5 +1,7 @@
 use plotters::prelude::*;
 
+pub mod random_walk;
+
 fn main() {
     let drawing_area = BitMapBackend::new("random-walk.png", (900, 900))
         .into_drawing_area()
