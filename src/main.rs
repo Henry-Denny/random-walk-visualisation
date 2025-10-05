@@ -5,7 +5,7 @@ use random_walk::{Point, RandomWalk};
 pub mod random_walk;
 
 fn main() {
-    let drawing_area = BitMapBackend::gif("random-walk.gif", (900, 900), 500)
+    let drawing_area = BitMapBackend::gif("random-walk.gif", (900, 900), 250)
         .expect("Should be able to create new gif")
         .into_drawing_area()
         .margin(30, 30, 30, 30);
@@ -19,6 +19,15 @@ fn main() {
         .unwrap();
 
     chart.configure_mesh().draw().unwrap();
+
+    // Draw origin
+    chart
+        .draw_series(PointSeries::of_element([(0, 0)], 5, &BLACK, &|c, s, st| {
+            return EmptyElement::at(c)    // We want to construct a composed element on-the-fly
+            + Circle::new((0,0),s,st.filled()) // At this point, the new pixel coordinate is established
+            + Text::new("O", (-25, 5), ("sans-serif", 30).into_font());
+        }))
+        .expect("Should be able to draw origin");
 
     let rw: Vec<Point> = RandomWalk::new(25).collect();
     rw.windows(2).for_each(|line| {
